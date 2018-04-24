@@ -36,17 +36,15 @@
 (define-minor-mode html-wysiwyg-mode
   "A minor mode for partial WYSIWYG editing of HTML, akin to
   org."
-  :after-hook (html-wysiwyg-initialise)
-  :keymap `((,(kbd "C-c , e") . html-wysiwyg-edit-link-at-point)
-            (,(kbd "C-c , h") . html-wysiwyg-hide-links)
-            (,(kbd "C-c , s") . html-wysiwyg-show-links)))
-
-(defun html-wysiwyg-initialise ()
-  "Initialises html-wysiwyg-mode."
-  (interactive)
-  (add-to-list 'font-lock-extra-managed-props 'invisible)
-  (add-to-list 'font-lock-extra-managed-props 'help-echo)
-  (html-wysiwyg-hide-links))
+  :keymap `((,(kbd "C-c , e") . html-wysiwyg-edit-link-at-point))
+  (if html-wysiwyg-mode
+      ;; Enabled
+      (progn
+        (add-to-list 'font-lock-extra-managed-props 'invisible)
+        (add-to-list 'font-lock-extra-managed-props 'help-echo)
+        (html-wysiwyg-hide-links))
+    ;; Disabled
+    (html-wysiwyg-show-links)))
 
 (defvar html-wysiwyg-link-match
   (rx (group "<a" (+? (not (any "<" ">"))) "href=" (syntax string-quote))
